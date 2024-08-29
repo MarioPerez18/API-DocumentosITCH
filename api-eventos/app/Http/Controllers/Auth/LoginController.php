@@ -11,7 +11,40 @@ class LoginController extends Controller
 {
 
     /**
-     * Authenticate the user.
+     * Autenticar al usuario.
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Usuarios"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", example="juan@gmail.com"),
+     *             @OA\Property(property="password", type="string", example="juan12345")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", example="5|fdervsdvsd43dfbsdsd"),
+     *             @OA\Property(property="role", type="string", example="participante"),
+     *             @OA\Property(property="user", type="string", example="Luis Mario"),
+     *             @OA\Property(property="user_id", type="integer", example="5"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error en la solicitud",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="correo y/o contraseña incorrectos")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -35,7 +68,8 @@ class LoginController extends Controller
         
             'token' => $user->createToken($request->email)->plainTextToken,
             'role' => $user->role,
-            'user' => $user
+            'user' => $user->names,
+            'user_id' => $user->id
         ];
 
         return response()->json($response, 200);

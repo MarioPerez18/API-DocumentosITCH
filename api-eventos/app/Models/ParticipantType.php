@@ -10,6 +10,6 @@ class ParticipantType extends Model
     use HasFactory;
 
     public function event_participant(){
-        return $this->belongsTo(EventParticipant::class);
+        return $this->belongsTo(EventUser::class);
     }
 }

@@ -8,12 +8,14 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+
+    
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(User::all());
+        //
     }
 
     /**
@@ -27,9 +29,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show()
     {
-        return response()->json(User::find($id));
+       //
     }
 
     /**

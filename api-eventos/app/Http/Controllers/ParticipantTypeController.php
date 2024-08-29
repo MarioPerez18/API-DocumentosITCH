@@ -12,7 +12,7 @@ class ParticipantTypeController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(ParticipantType::select("id","ParticipantType")->where("ParticipantType", "Coordinador")->get());
     }
 
     /**

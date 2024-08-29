@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Institution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class InstitutionController extends Controller
 {
@@ -12,12 +13,8 @@ class InstitutionController extends Controller
      */
     public function index()
     {
-        return response()->json(Institution::all(), 200);
-        
-        /*//relacion
-        $institucion = Institution::find(1);
-        $tipoInstitucion = $institucion->institution_type;
-        return response()->json($tipoInstitucion);*/
+        $instituciones = Institution::with('institution_type')->where('is_deleted', false)->get();
+        return response()->json($instituciones);
     }
 
     /**
@@ -25,7 +22,20 @@ class InstitutionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //se eliminan los acentos de las cadenas
+        $UriLongName = Str::ascii($request->longName);
+        Institution::create([
+            "shortName" => $request->shortName,
+            "longName" => $request->longName,
+            "longNameUri" => Str::lower($UriLongName),
+            "institution_type_id" => $request->institution_type_id
+        ]);
+
+        return response()->json([
+            "respuesta" => "La institución ha sido registrada",
+            "icono" => "success"
+        ], 201);
+
     }
 
     /**
@@ -41,7 +51,19 @@ class InstitutionController extends Controller
      */
     public function update(Request $request, Institution $institution)
     {
-        //
+        //se eliminan los acentos de las cadenas
+        $UriLongName = Str::ascii($request->longName);
+        Institution::where('id', $institution->id)->update([
+            "shortName" => $request->shortName,
+            "longName" => $request->longName,
+            "longNameUri" => Str::lower($UriLongName),
+            "institution_type_id" => $request->institution_type_id
+        ]);
+        
+        return response()->json([
+            "respuesta" => "Institucion actualizada",
+            "icono" => "success"
+        ], 202);
     }
 
     /**
@@ -49,6 +71,11 @@ class InstitutionController extends Controller
      */
     public function destroy(Institution $institution)
     {
-        //
+        Institution::where('id', $institution->id)->update(['is_deleted' => true]);
+
+        return response()->json([
+            "respuesta" => "Institucion eliminada",
+            "icono" => "success"
+        ], 202);
     }
 }

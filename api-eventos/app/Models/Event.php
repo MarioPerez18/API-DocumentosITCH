@@ -9,6 +9,14 @@ class Event extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'startDate',
+        'endDate',
+        'nameEvent',
+        'nameEventUri',
+        'description'
+    ];
+
 
     public function users(){
         return $this->belongsToMany(User::class);

@@ -22,6 +22,6 @@ class Document extends Model
     
 
     public function event_participant(){
-        return $this->belongsTo(EventParticipant::class);
+        return $this->belongsTo(EventUser::class);
     }
 }

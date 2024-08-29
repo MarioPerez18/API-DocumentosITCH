@@ -9,12 +9,19 @@ class Institution extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'shortName',
+        'longName',
+        'longNameUri',
+        'institution_type_id'
+    ];
+
     public function users(){
         return $this->hasMany(User::class);
     }
 
     public function institution_type(){
-        return $this->belongsTo(InstitutionType::class, 'institutionTypes_id');
+        return $this->belongsTo(InstitutionType::class, 'institution_type_id');
     }
 
     

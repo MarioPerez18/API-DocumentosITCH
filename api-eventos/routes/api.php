@@ -5,8 +5,9 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\EventParticipantController;
+use App\Http\Controllers\EventUserController;
 use App\Http\Controllers\InstitutionController;
+use App\Http\Controllers\InstitutionTypeController;
 use App\Http\Controllers\ParticipantTypeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -35,17 +36,22 @@ Route::post('/login', [LoginController::class, 'store']);
 Route::get('/institutions', [InstitutionController::class, 'index']);
 Route::get('/validation/{cadena}', [DocumentController::class, 'decifrar_documento']);
 
-
+Route::apiResources([
+    'events' => EventController::class,
+    'documents' => DocumentController::class,
+    'participant-types' => ParticipantTypeController::class,
+    'participant-event' => EventUserController::class,
+    'users' => UserController::class,
+    'institution-type' => InstitutionTypeController::class
+]);
 
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/logout', [LogoutController::class, 'store']);
-    Route::apiResources([
-        'events' => EventController::class,
-        'documents' => DocumentController::class,
-        'participant-types' => ParticipantTypeController::class,
-        'participant-event' => EventParticipantController::class,
-        'users' => UserController::class   
-    ]);
+    Route::post('/user-event', [EventUserController::class, 'asignar_coordinador_a_evento']);
+    Route::post('/institution', [InstitutionController::class, 'store']);
+    Route::put('/update-institution/{institution}', [InstitutionController::class, 'update']);
+    Route::delete('/institution/{institution}', [InstitutionController::class, 'destroy']);
+    
 });
 
 

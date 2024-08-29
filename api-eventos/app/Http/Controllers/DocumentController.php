@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
-use App\Models\EventParticipant;
 use DateTime;
 use Illuminate\Http\Request;
 use QRCode;
@@ -12,8 +11,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EnviarCorreos;
-
-
+use App\Models\EventUser;
 
 class DocumentController extends Controller
 {
@@ -46,8 +44,6 @@ class DocumentController extends Controller
     public function index()
     {
         return response()->json(Document::all(), 200);
-       
-       
     }
 
     public function cifrar_datos($body){ 
@@ -124,11 +120,51 @@ class DocumentController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un recurso creado - genera documentos de participación.
+     * @OA\Post(
+     *     path="/api/documents",
+     *     tags={"Documentos"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id", "Nombres", "ApellidoPaterno", "ApellidoMaterno", "Correo", "Evento", "Descripcion", "TipoParticipante", "FechaTermino"},
+     *             @OA\Property(property="id", type="number", example="1"),
+     *             @OA\Property(property="Nombres", type="string", example="Luis Mario"),
+     *             @OA\Property(property="ApellidoPaterno", type="string", example="Pérez"),
+     *             @OA\Property(property="ApellidoMaterno", type="string", example="Ramírez"),
+     *             @OA\Property(property="Correo", type="string", example="vapire117@gmail.com"),
+     *             @OA\Property(property="Evento", type="string", example="Academia Journals"),
+     *             @OA\Property(property="Descripcion", type="text", example="Espacio de trabajo que da a conocer los resultados de trabajos de investigación."),
+     *             @OA\Property(property="TipoParticipante", type="string", example="Ponente"),
+     *             @OA\Property(property="FechaTermino", type="datetime", example="2024-05-29 17:00:00")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Documentos generados y enviados"),
+     *             @OA\Property(property="icono", type="string", example="success")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error en la solicitud",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Faltan campos")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
         $datos_del_participante = array(
+            "id" => $request->id,
             "Nombres" => $request->Nombres,
             "ApellidoPaterno" => $request->ApellidoPaterno,
             "ApellidoMaterno" => $request->ApellidoMaterno,
@@ -148,9 +184,8 @@ class DocumentController extends Controller
             if($nombre_archivo_pdf == $archivo_generado["archive"]){
                 return response()->json([
                     "documento" => "Los documentos ya existen",
-                    "icono" => "error",
-                    "codigo" => 400
-                ]);
+                    "icono" => "error"
+                ], 208);
             } 
         }
        
@@ -158,13 +193,12 @@ class DocumentController extends Controller
         $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_del_participante)), $datos_del_participante, $nombre_archivo_pdf);
         $this->guardar_documento();
         $id_documento = Document::select('id')->get();
-        $this->vincular_documento_participante($id_documento);
+        $this->vincular_documento_participante($id_documento,  $datos_del_participante);
         $this->enviar_documentos_por_correo($datos_del_participante);
         return response()->json([
             "documento" => "Documentos generados y enviados",
-            "icono" => "success",
-            "codigo" => 200
-        ]);
+            "icono" => "success"
+        ], 201);
     }
 
 
@@ -191,22 +225,57 @@ class DocumentController extends Controller
     }
 
 
+    /**
+     * Validación del documento de participación digital.
+     * @OA\Get(
+     *     path="/api/documents",
+     *     tags={"Documentos"},
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="cadena",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="Nombres", type="string", example="Luis Mario"),
+     *             @OA\Property(property="ApellidoPaterno", type="string", example="Pérez"),
+     *             @OA\Property(property="ApellidoMaterno", type="string", example="Ramírez"),
+     *             @OA\Property(property="Evento", type="string", example="Academia Journals"),
+     *             @OA\Property(property="Descripcion", type="text", example="Espacio de trabajo que da a conocer los resultados de trabajos de investigación."),
+     *             @OA\Property(property="TipoParticipante", type="string", example="Ponente"),
+     *             @OA\Property(property="FechaTermino", type="datetime", example="2024-05-29 17:00:00")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Los datos no coinciden"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     */
+
+
     public function decifrar_documento($cadena){
         $cadena_decifrada = $this->decifrar_cadena($cadena);
         return response()->json(json_decode($cadena_decifrada));  
     }
     
 
-    public function vincular_documento_participante($id_documento){
-        $id_documento_participante = array();
-        foreach($id_documento as $id){
-            $id_documento_participante = $id;
-            EventParticipant::where('users_id', $id_documento_participante["id"])->update(['documents_id' => $id_documento_participante["id"]]);
+    public function vincular_documento_participante($id_documento, $id_usuario){
+        $id_documento_participante = $id_documento->toArray();
+        foreach($id_documento_participante as $id){
+             EventUser::where('id', $id_usuario["id"])->update(['document_id' => $id["id"]]);
         }
     }
 
 
-    //Por ahora funciona bien
+    //Enviar los documentos de participación
     public function enviar_documentos_por_correo($body){
         $pdf = public_path('archivos_pdf') . '/' . $this->getNombreArchivo();
         Mail::to($body["Correo"])->send(new EnviarCorreos($pdf, $body));

@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('institutions', function (Blueprint $table) {
-            $table->id();
-            $table->string('shortName');
-            $table->string('longName');
-            $table->foreignId('institution_type_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('institutions', function (Blueprint $table) {
+            $table->string('longNameUri');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('institutions');
+        Schema::table('institutions', function (Blueprint $table) {
+            $table->dropColumn('longNameUri');
+        });
     }
 };
