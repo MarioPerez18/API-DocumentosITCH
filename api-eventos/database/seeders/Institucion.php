@@ -18,6 +18,8 @@ class Institucion extends Seeder
         $institucion->shortName = 'ITCH';
         $institucion->longName = 'Instituto Tecnológico De Chetumal';
         $institucion->institution_type_id = 1;
+        $institucion->is_deleted = false;
+        $institucion->longNameuri = "instituto tecnologico de chetumal";
         $institucion->save();
     }
 }

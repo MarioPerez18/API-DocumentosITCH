@@ -16,5 +16,9 @@ class TipoParticipanteSeeder extends Seeder
         $tipo_participante = new ParticipantType();
         $tipo_participante->participantType = 'Ponente';
         $tipo_participante->save();
+
+        $tipo_participante_coordi = new ParticipantType();
+        $tipo_participante_coordi->participantType = 'Coordinador';
+        $tipo_participante_coordi->save();
     }
 }
