@@ -36,14 +36,7 @@ Route::post('/login', [LoginController::class, 'store']);
 Route::get('/institutions', [InstitutionController::class, 'index']);
 Route::get('/validation/{cadena}', [DocumentController::class, 'decifrar_documento']);
 
-Route::apiResources([
-    'events' => EventController::class,
-    'documents' => DocumentController::class,
-    'participant-types' => ParticipantTypeController::class,
-    'participant-event' => EventUserController::class,
-    'users' => UserController::class,
-    'institution-type' => InstitutionTypeController::class
-]);
+
 
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/logout', [LogoutController::class, 'store']);
@@ -51,7 +44,14 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/institution', [InstitutionController::class, 'store']);
     Route::put('/update-institution/{institution}', [InstitutionController::class, 'update']);
     Route::delete('/institution/{institution}', [InstitutionController::class, 'destroy']);
-    
+    Route::apiResources([
+        'events' => EventController::class,
+        'documents' => DocumentController::class,
+        'participant-types' => ParticipantTypeController::class,
+        'participant-event' => EventUserController::class,
+        'users' => UserController::class,
+        'institution-type' => InstitutionTypeController::class
+    ]);
 });
 
 
