@@ -87,8 +87,8 @@ class EventController extends Controller
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
             'nameEvent' => $request->nameEvent,
-            "nameEventUri" => Str::lower($UriNameEvent),
-            'description' => $request->description
+            'description' => $request->description,
+            'nameEventUri' => Str::lower($UriNameEvent)
         ]);
 
         return response()->json([

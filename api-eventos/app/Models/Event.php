@@ -13,8 +13,8 @@ class Event extends Model
         'startDate',
         'endDate',
         'nameEvent',
-        'nameEventUri',
-        'description'
+        'description',
+        'nameEventUri'
     ];
 
 

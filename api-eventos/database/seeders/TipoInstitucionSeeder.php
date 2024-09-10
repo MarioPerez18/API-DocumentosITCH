@@ -13,9 +13,15 @@ class TipoInstitucionSeeder extends Seeder
      */
     public function run(): void
     {
-        $tipo_institucion = new InstitutionType();
+        /*$tipo_institucion = new InstitutionType();
 
         $tipo_institucion->type = 'Educativa';
-        $tipo_institucion->save();
+        $tipo_institucion->save();*/
+
+        InstitutionType::create([
+            'type' => 'Educativa'
+        ]);
+
+
     }
 }

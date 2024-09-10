@@ -17,6 +17,8 @@ return new class extends Migration
             $table->dateTime('endDate');
             $table->string('nameEvent');
             $table->text('description');
+            $table->string('nameEventUri');
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }

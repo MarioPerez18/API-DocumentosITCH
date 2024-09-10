@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('shortName');
             $table->string('longName');
+            $table->string('longNameUri');
+            $table->boolean('is_deleted')->default(false);
             $table->foreignId('institution_type_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
