@@ -104,7 +104,7 @@ class DocumentController extends Controller
         $pdf->Image($ruta_png_tecnm,  220, 5, 40, 20,'PNG');
         $pdf->Image($ruta_png_itch,  258, 5, 30, 20,'PNG');
         $pdf->SetFont('Arial','',20);
-        $pdf->SetXY(76,88);
+        $pdf->SetXY($registro["coordenada_x"],$registro["coordenada_y"]);
         $pdf->Cell(161, 10,  utf8_decode("{$registro["Nombres"]} {$registro["ApellidoPaterno"]} {$registro["ApellidoMaterno"]}"), 0, 0, 'C');
         $pdf->SetFont('Arial','',15);
         $pdf->SetXY(76,102);
@@ -165,14 +165,16 @@ class DocumentController extends Controller
     {
         $datos_del_participante = array(
             "id" => $request->id,
-            "Nombres" => $request->Nombres,
-            "ApellidoPaterno" => $request->ApellidoPaterno,
-            "ApellidoMaterno" => $request->ApellidoMaterno,
-            "Correo" => $request->Correo,
-            "Evento" => $request->Evento,
-            "Descripcion" => $request->Descripcion,
-            "TipoParticipante" => $request->TipoParticipante,
-            "FechaTermino" => $request->FechaTermino
+            "Nombres" => $request->participante["Nombres"],
+            "ApellidoPaterno" => $request->participante["ApellidoPaterno"],
+            "ApellidoMaterno" => $request->participante["ApellidoMaterno"],
+            "Correo" => $request->participante["Correo"],
+            "Evento" => $request->participante["Evento"],
+            "Descripcion" => $request->participante["Descripcion"],
+            "TipoParticipante" => $request->participante["TipoParticipante"],
+            "FechaTermino" => $request->participante["FechaTermino"],
+            "coordenada_x" => $request->coordenada_x,
+            "coordenada_y" => $request->coordenada_y
         );
 
         //nombre del archivo
