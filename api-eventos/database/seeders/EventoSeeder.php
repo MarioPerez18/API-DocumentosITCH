@@ -13,7 +13,7 @@ class EventoSeeder extends Seeder
      */
     public function run(): void
     {
-        Event::create([
+        /*Event::create([
             'startDate' => '2024-05-28 09:00:00',
             'endDate' => '2024-05-29 17:00:00',
             'nameEvent' => 'Academia Journals',
@@ -27,6 +27,6 @@ class EventoSeeder extends Seeder
             'nameEvent' => 'Simposium V',
             'description' => 'Espacio de trabajo donde cualquier autor puede dar a conocer su investigación.',
             'nameEventUri' => 'simposium v'
-        ]);
+        ]);*/
     }
 }

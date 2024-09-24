@@ -22,6 +22,10 @@ class TipoInstitucionSeeder extends Seeder
             'type' => 'Educativa'
         ]);
 
+        InstitutionType::create([
+            'type' => 'Cultural'
+        ]);
+
 
     }
 }

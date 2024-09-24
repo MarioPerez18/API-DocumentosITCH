@@ -199,6 +199,12 @@ class DocumentController extends Controller
             "documento" => "Documentos generados y enviados",
             "icono" => "success"
         ], 201);
+        
+        /*//esto si funcionó, recupera el nombre del participante del objeto participante.
+        return response()->json([
+            "documento" => $request->participante["Nombres"],
+            "icono" => "success"
+        ], 201);*/
     }
 
 

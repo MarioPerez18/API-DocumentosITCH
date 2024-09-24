@@ -9,7 +9,17 @@ class ParticipantType extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'participantType'
+    ];
+
     public function event_participant(){
         return $this->belongsTo(EventUser::class);
     }
+
+    public function events(){
+        return $this->belongsToMany(Event::class);
+    }
 }
+
+

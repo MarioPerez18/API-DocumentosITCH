@@ -12,8 +12,7 @@ class InstitutionTypeController extends Controller
      */
     public function index()
     {
-        return response()->json(InstitutionType::all(), 200);
-       
+        return response()->json(InstitutionType::all(), 200);   
     }
 
     /**

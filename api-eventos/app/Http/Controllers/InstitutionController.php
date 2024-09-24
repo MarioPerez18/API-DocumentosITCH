@@ -17,6 +17,7 @@ class InstitutionController extends Controller
         return response()->json($instituciones);
     }
 
+    
     /**
      * Store a newly created resource in storage.
      */

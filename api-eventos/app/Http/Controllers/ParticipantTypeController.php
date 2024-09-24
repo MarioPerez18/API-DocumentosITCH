@@ -12,7 +12,8 @@ class ParticipantTypeController extends Controller
      */
     public function index()
     {
-        return response()->json(ParticipantType::select("id","ParticipantType")->where("ParticipantType", "Coordinador")->get());
+        return response()->json(ParticipantType::all(), 200);
+        //return response()->json(ParticipantType::select("id","ParticipantType")->where("ParticipantType", "Coordinador")->get());
     }
 
     /**
@@ -20,7 +21,14 @@ class ParticipantTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        ParticipantType::create([
+            'participantType' => $request->participantType
+        ]);
+
+        return response()->json([
+            'respuesta' => "Tipo de participante registrado",
+            'icono' => 'success'
+        ], 201);
     }
 
     /**

@@ -4,7 +4,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventParticipantTypeController;
 use App\Http\Controllers\EventUserController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\InstitutionTypeController;
@@ -44,13 +46,17 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/institution', [InstitutionController::class, 'store']);
     Route::put('/update-institution/{institution}', [InstitutionController::class, 'update']);
     Route::delete('/institution/{institution}', [InstitutionController::class, 'destroy']);
+    Route::put('/event-participant-type', [EventParticipantTypeController::class, 'asignar_tipos_participantes_a_eventos']);
+    Route::get('/type_document/{tipo_participante}', [DocumentTypeController::class, 'plantilla_participante']);
     Route::apiResources([
         'events' => EventController::class,
         'documents' => DocumentController::class,
         'participant-types' => ParticipantTypeController::class,
         'participant-event' => EventUserController::class,
         'users' => UserController::class,
-        'institution-type' => InstitutionTypeController::class
+        'institution-type' => InstitutionTypeController::class,
+        'document_type' => DocumentTypeController::class,
+        'participant-type-document-type' => EventParticipantTypeController::class
     ]);
 });
 

@@ -41,6 +41,11 @@ class EventController extends Controller
     {
        $eventos = Event::where('is_deleted', false)->get();
        return response()->json($eventos);
+
+       /*$evento = Event::find(1);
+       $participant_types = $evento->participant_types;
+ 
+       return response()->json($participant_types);*/
     }
 
     /**
@@ -91,11 +96,21 @@ class EventController extends Controller
             'nameEventUri' => Str::lower($UriNameEvent)
         ]);
 
+        //Cuando se registre un evento insertarlo junto con el tipo de participante asociado.
+        //Se insertará en la tabla pivote
+        /*foreach($request->participantTypes as $tipo_participante){
+            $evento = Event::find($request->id);
+            $evento->participant_types()->attach([
+                'participant_type_id' => $tipo_participante
+            ]);
+        }*/
+        
         return response()->json([
             "respuesta" => "Evento registrado",
             "icono" => "success"
         ], 201);
     }
+
 
     /**
      * Display the specified resource.

@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             EventoSeeder::class,
             TipoInstitucionSeeder::class,
             Institucion::class,
-            UsesuarioSeeder::class
+            UsuarioSeeder::class,
+            DocumentTypeSeeder::class
         ]);
     }
 }

@@ -21,7 +21,7 @@ class Institution extends Model
     }
 
     public function institution_type(){
-        return $this->belongsTo(InstitutionType::class, 'institution_type_id');
+        return $this->belongsTo(InstitutionType::class);
     }
 
     

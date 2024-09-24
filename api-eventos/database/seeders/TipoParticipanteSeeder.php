@@ -13,22 +13,14 @@ class TipoParticipanteSeeder extends Seeder
      */
     public function run(): void
     {
-        /*$tipo_participante = new ParticipantType();
-        $tipo_participante->participantType = 'Ponente';
-        $tipo_participante->save();
-
-        $tipo_participante_coordi = new ParticipantType();
-        $tipo_participante_coordi->participantType = 'Coordinador';
-        $tipo_participante_coordi->save();*/
-
         ParticipantType::create([
-            'participantType' => 'Ponente'
+            'participantType' => 'coordinador'
         ]);
-
-        ParticipantType::create([
-            'participantType' => 'Coordinador'
-        ]);
-
-
+        
+        /*ParticipantType::create([
+            'participantType' => 'ponente'
+        ]);*/
     }
 }
+
+
