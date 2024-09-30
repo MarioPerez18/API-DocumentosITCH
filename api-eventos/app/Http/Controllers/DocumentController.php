@@ -96,7 +96,7 @@ class DocumentController extends Controller
         $fecha = new DateTime($registro["FechaTermino"]);
         $fechaFormateada = $fecha->format('d \d\e M \d\e\l Y');
 
-         //crear pdf
+        //crear pdf
         $pdf = new FPDF();
         $pdf->AddPage('horizontal');
         $pdf->Image($ruta_png, 0, 0, 300, 210,'PNG');
