@@ -27,9 +27,13 @@ class DocumentTypeController extends Controller
         $url_plantilla = url($plantilla_documento);
         $tipo_plantilla =  $tipo_documento;
 
+        //png QR
+        $png_qr = url('png_qrcode' . '/' . 'img_qr' . '/' . '66fb3db705cec.png');
+
         return response()->json([
             $tipo_plantilla,
-            $url_plantilla
+            $url_plantilla,
+            $png_qr
         ], 200);
     }
 

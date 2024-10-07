@@ -100,14 +100,14 @@ class DocumentController extends Controller
         $pdf = new FPDF();
         $pdf->AddPage('horizontal');
         $pdf->Image($ruta_png, 0, 0, 300, 210,'PNG');
-        $pdf->Image($QRcode,  141, 170, 30, 30,'PNG');
+        $pdf->Image($QRcode,  $registro["coordenada_x_qr"], $registro["coordenada_y_qr"], 30, 30,'PNG');
         $pdf->Image($ruta_png_tecnm,  220, 5, 40, 20,'PNG');
         $pdf->Image($ruta_png_itch,  258, 5, 30, 20,'PNG');
         $pdf->SetFont('Arial','',20);
         $pdf->SetXY($registro["coordenada_x"],$registro["coordenada_y"]);
         $pdf->Cell(161, 10,  utf8_decode("{$registro["Nombres"]} {$registro["ApellidoPaterno"]} {$registro["ApellidoMaterno"]}"), 0, 0, 'C');
         $pdf->SetFont('Arial','',15);
-        $pdf->SetXY(76,102);
+        $pdf->SetXY($registro["coordenada_x_descripcion"],$registro["coordenada_y_descripcion"]);
         $pdf->MultiCell(161, 7, utf8_decode("Por su participación como {$registro["TipoParticipante"]} en el evento {$registro["Evento"]}: {$registro["Descripcion"]}") , 0, 'C', 0);
         $pdf->SetFont('Arial','',10);
         $pdf->SetXY(76,160);
@@ -165,18 +165,23 @@ class DocumentController extends Controller
     {
         $datos_del_participante = array(
             "id" => $request->id,
-            "Nombres" => $request->participante["Nombres"],
-            "ApellidoPaterno" => $request->participante["ApellidoPaterno"],
-            "ApellidoMaterno" => $request->participante["ApellidoMaterno"],
-            "Correo" => $request->participante["Correo"],
-            "Evento" => $request->participante["Evento"],
-            "Descripcion" => $request->participante["Descripcion"],
-            "TipoParticipante" => $request->participante["TipoParticipante"],
-            "FechaTermino" => $request->participante["FechaTermino"],
+            "Nombres" => $request->participante[0]["Nombres"],
+            "ApellidoPaterno" => $request->participante[0]["ApellidoPaterno"],
+            "ApellidoMaterno" => $request->participante[0]["ApellidoMaterno"],
+            "Correo" => $request->participante[0]["Correo"],
+            "Evento" => $request->participante[0]["Evento"],
+            "Descripcion" => $request->participante[0]["Descripcion"],
+            "TipoParticipante" => $request->participante[0]["TipoParticipante"],
+            "FechaTermino" => $request->participante[0]["FechaTermino"],
             "coordenada_x" => $request->coordenada_x,
-            "coordenada_y" => $request->coordenada_y
+            "coordenada_y" => $request->coordenada_y,
+            "coordenada_x_qr" => $request->coordenada_x_qr,
+            "coordenada_y_qr" => $request->coordenada_y_qr,
+            "coordenada_x_descripcion" => $request->coordenada_x_descripcion,
+            "coordenada_y_descripcion" => $request->coordenada_y_descripcion
         );
 
+        
         //nombre del archivo
         $nombre_archivo_pdf = "{$datos_del_participante["Evento"]}_{$datos_del_participante["Nombres"]}.pdf";
         //se verifica si el archivo ya existe, si ya existe ya no se creará otra vez
@@ -202,11 +207,9 @@ class DocumentController extends Controller
             "icono" => "success"
         ], 201);
         
-        /*//esto si funcionó, recupera el nombre del participante del objeto participante.
-        return response()->json([
-            "documento" => $request->participante["Nombres"],
-            "icono" => "success"
-        ], 201);*/
+        //esto si funcionó, recupera el nombre del participante del objeto participante.
+        //return response()->json($request->details[0]["type"]);
+        
     }
 
 
