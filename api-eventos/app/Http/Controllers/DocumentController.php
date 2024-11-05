@@ -97,9 +97,9 @@ class DocumentController extends Controller
         $fechaFormateada = $fecha->format('d \d\e M \d\e\l Y');
 
         //crear pdf
-        $pdf = new FPDF();
+        $pdf = new FPDF('L','mm', array(297,210));
         $pdf->AddPage('horizontal');
-        $pdf->Image($ruta_png, 0, 0, 300, 210,'PNG');
+        $pdf->Image($ruta_png, 0, 0, 297, 210,'PNG');
         $pdf->Image($QRcode,  $registro["coordenada_x_qr"], $registro["coordenada_y_qr"], 30, 30,'PNG');
         $pdf->Image($ruta_png_tecnm,  220, 5, 40, 20,'PNG');
         $pdf->Image($ruta_png_itch,  258, 5, 30, 20,'PNG');
@@ -165,6 +165,23 @@ class DocumentController extends Controller
     {
         $datos_del_participante = array(
             "id" => $request->id,
+            "Nombres" => $request->Nombres,
+            "ApellidoPaterno" => $request->ApellidoPaterno,
+            "ApellidoMaterno" => $request->ApellidoMaterno,
+            "Correo" => $request->Correo,
+            "Evento" => $request->Evento,
+            "Descripcion" => $request->Descripcion,
+            "TipoParticipante" => $request->TipoParticipante,
+            "FechaTermino" => $request->FechaTermino,
+            "coordenada_x" => $request->coordenada_x,
+            "coordenada_y" => $request->coordenada_y,
+            "coordenada_x_qr" => $request->coordenada_x_qr,
+            "coordenada_y_qr" => $request->coordenada_y_qr,
+            "coordenada_x_descripcion" => $request->coordenada_x_descripcion,
+            "coordenada_y_descripcion" => $request->coordenada_y_descripcion
+        );
+        /*$datos_del_participante = array(
+            "id" => $request->id,
             "Nombres" => $request->participante[0]["Nombres"],
             "ApellidoPaterno" => $request->participante[0]["ApellidoPaterno"],
             "ApellidoMaterno" => $request->participante[0]["ApellidoMaterno"],
@@ -179,7 +196,9 @@ class DocumentController extends Controller
             "coordenada_y_qr" => $request->coordenada_y_qr,
             "coordenada_x_descripcion" => $request->coordenada_x_descripcion,
             "coordenada_y_descripcion" => $request->coordenada_y_descripcion
-        );
+        );*/
+
+        
 
         
         //nombre del archivo
@@ -198,14 +217,15 @@ class DocumentController extends Controller
        
 
         $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_del_participante)), $datos_del_participante, $nombre_archivo_pdf);
-        $this->guardar_documento();
+        /*$this->guardar_documento();
         $id_documento = Document::select('id')->get();
         $this->vincular_documento_participante($id_documento,  $datos_del_participante);
-        $this->enviar_documentos_por_correo($datos_del_participante);
+        $this->enviar_documentos_por_correo($datos_del_participante);*/
         return response()->json([
             "documento" => "Documentos generados y enviados",
             "icono" => "success"
         ], 201);
+        
         
         //esto si funcionó, recupera el nombre del participante del objeto participante.
         //return response()->json($request->details[0]["type"]);
