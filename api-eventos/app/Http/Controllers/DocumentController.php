@@ -109,9 +109,9 @@ class DocumentController extends Controller
         $pdf->SetFont('Arial','',15);
         $pdf->SetXY($registro["coordenada_x_descripcion"],$registro["coordenada_y_descripcion"]);
         $pdf->MultiCell(145, 7, utf8_decode("Por su participación como {$registro["TipoParticipante"]} en el evento {$registro["Evento"]}: {$registro["Descripcion"]}") , 0, 'C', 0);
-        $pdf->SetFont('Arial','',10);
+        $pdf->SetFont('Arial','',9);
         $pdf->SetXY($registro["coordenada_x_fecha"],$registro["coordenada_y_fecha"]);
-        $pdf->MultiCell(70, 3,  utf8_decode("Fecha de finalización: {$fechaFormateada}"), 0, 'C', 0);
+        $pdf->MultiCell(79, 5,  utf8_decode("Fecha de finalización: {$fechaFormateada}"), 0, 'C', 0);
 
         // Guardar el archivo pdf en la carpeta especificada
         $pdf->Output('F', $ruta_pdf, true);
@@ -187,7 +187,7 @@ class DocumentController extends Controller
         $nombre_archivo_pdf = "{$datos_del_participante["Evento"]}_{$datos_del_participante["Nombres"]}.pdf";
         //se verifica si el archivo ya existe, si ya existe ya no se creará otra vez
         //sino existe generarlo.
-        $generados = Document::select('archive')->get();
+        /*$generados = Document::select('archive')->get();
         foreach($generados as $archivo_generado){
             if($nombre_archivo_pdf == $archivo_generado["archive"]){
                 return response()->json([
@@ -195,14 +195,14 @@ class DocumentController extends Controller
                     "icono" => "error"
                 ], 208);
             } 
-        }
+        }*/
        
 
         $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_del_participante)), $datos_del_participante, $nombre_archivo_pdf);
-        $this->guardar_documento();
+        /*$this->guardar_documento();
         $id_documento = Document::select('id')->get();
         $this->vincular_documento_participante($id_documento,  $datos_del_participante);
-        $this->enviar_documentos_por_correo($datos_del_participante);
+        $this->enviar_documentos_por_correo($datos_del_participante);*/
         return response()->json([
             "documento" => "Documentos generados y enviados",
             "icono" => "success"
