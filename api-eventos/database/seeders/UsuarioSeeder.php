@@ -59,5 +59,16 @@ class UsuarioSeeder extends Seeder
             'password' => Hash::make('hernandezitch10'),
             'institution_id' => 1
         ]);
+
+        User::create([
+            'paternalSurname' => 'León',
+            'maternalSurname' => 'herrera',
+            'names' => 'Raul Aurelio',
+            'gender' => 'H',
+            'phoneNumber' => '9830002134',
+            'email' => 'leo_aurelio@gmail.com',
+            'password' => Hash::make('aurelioitch10'),
+            'institution_id' => 1
+        ]);
     }
 }

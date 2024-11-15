@@ -165,14 +165,14 @@ class DocumentController extends Controller
     {
         $datos_del_participante = array(
             "id" => $request->id,
-            "Nombres" => $request->participante[0]["Nombres"],
-            "ApellidoPaterno" => $request->participante[0]["ApellidoPaterno"],
-            "ApellidoMaterno" => $request->participante[0]["ApellidoMaterno"],
-            "Correo" => $request->participante[0]["Correo"],
-            "Evento" => $request->participante[0]["Evento"],
-            "Descripcion" => $request->participante[0]["Descripcion"],
-            "TipoParticipante" => $request->participante[0]["TipoParticipante"],
-            "FechaTermino" => $request->participante[0]["FechaTermino"],
+            "Nombres" => $request->Nombres,
+            "ApellidoPaterno" =>  $request-> ApellidoPaterno,
+            "ApellidoMaterno" =>  $request->ApellidoMaterno,
+            "Correo" =>  $request-> Correo,
+            "Evento" =>  $request->Evento,
+            "Descripcion" =>  $request->Descripcion,
+            "TipoParticipante" => $request-> TipoParticipante,
+            "FechaTermino" =>  $request-> FechaTermino,
             "coordenada_x" => $request->coordenada_x,
             "coordenada_y" => $request->coordenada_y,
             "coordenada_x_qr" => $request->coordenada_x_qr,
@@ -211,7 +211,6 @@ class DocumentController extends Controller
         
         //esto si funcionó, recupera el nombre del participante del objeto participante.
         //return response()->json($request->details[0]["type"]);
-        
     }
 
 
