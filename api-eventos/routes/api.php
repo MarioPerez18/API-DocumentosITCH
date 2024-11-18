@@ -39,7 +39,6 @@ Route::get('/institutions', [InstitutionController::class, 'index']);
 Route::get('/validation/{cadena}', [DocumentController::class, 'decifrar_documento']);
 
 
-
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/logout', [LogoutController::class, 'store']);
     Route::post('/user-event', [EventUserController::class, 'asignar_coordinador_a_evento']);

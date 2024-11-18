@@ -50,7 +50,7 @@ class DocumentController extends Controller
         //crifrar datos.
         $datos_del_participante = json_encode($body);
         $cifrarDatos = Crypt::encryptString($datos_del_participante);
-        $url = 'http://localhost:8000/api/validation/' . $cifrarDatos;
+        $url = 'http://localhost:8000/api/validacion/' . $cifrarDatos;
         return $url;
     }
 
@@ -183,11 +183,24 @@ class DocumentController extends Controller
             "coordenada_y_fecha" => $request->coordenada_y_fecha
         );
 
+       
         //nombre del archivo
         $nombre_archivo_pdf = "{$datos_del_participante["Evento"]}_{$datos_del_participante["Nombres"]}.pdf";
+        $datos_a_cifrar= array(
+            "id" => $request->id,
+            "Nombres" => $request->Nombres,
+            "ApellidoPaterno" =>  $request-> ApellidoPaterno,
+            "ApellidoMaterno" =>  $request->ApellidoMaterno,
+            "Correo" =>  $request-> Correo,
+            "Evento" =>  $request->Evento,
+            "Descripcion" =>  $request->Descripcion,
+            "TipoParticipante" => $request-> TipoParticipante,
+            "FechaTermino" =>  $request-> FechaTermino,
+            "documento" =>  url('archivos_pdf' . '/'  .  $nombre_archivo_pdf)
+        );
         //se verifica si el archivo ya existe, si ya existe ya no se creará otra vez
         //sino existe generarlo.
-        /*$generados = Document::select('archive')->get();
+        $generados = Document::select('archive')->get();
         foreach($generados as $archivo_generado){
             if($nombre_archivo_pdf == $archivo_generado["archive"]){
                 return response()->json([
@@ -195,14 +208,14 @@ class DocumentController extends Controller
                     "icono" => "error"
                 ], 208);
             } 
-        }*/
+        }
        
 
-        $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_del_participante)), $datos_del_participante, $nombre_archivo_pdf);
-        /*$this->guardar_documento();
+        $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_a_cifrar)), $datos_del_participante, $nombre_archivo_pdf);
+        $this->guardar_documento();
         $id_documento = Document::select('id')->get();
         $this->vincular_documento_participante($id_documento,  $datos_del_participante);
-        $this->enviar_documentos_por_correo($datos_del_participante);*/
+        $this->enviar_documentos_por_correo($datos_del_participante);
         return response()->json([
             "documento" => "Documentos generados y enviados",
             "icono" => "success"
@@ -274,8 +287,27 @@ class DocumentController extends Controller
 
 
     public function decifrar_documento($cadena){
-        $cadena_decifrada = $this->decifrar_cadena($cadena);
-        return response()->json(json_decode($cadena_decifrada));  
+        $cadena_decifrada = json_decode($this->decifrar_cadena($cadena));
+        //sacar el folio del documento
+        $folio_documento_participante = EventUser::select('documents.number')
+        ->join('documents', 'event_user.document_id', '=', 'documents.id')
+        ->where('event_user.id',$cadena_decifrada->id)->get();
+
+        $datos_validados = array(
+            "id" => $cadena_decifrada->id,
+            "Nombres" => $cadena_decifrada->Nombres,
+            "ApellidoPaterno" => $cadena_decifrada->ApellidoPaterno,
+            "ApellidoMaterno" => $cadena_decifrada->ApellidoMaterno,
+            "Correo" => $cadena_decifrada->Correo,
+            "Evento" => $cadena_decifrada->Evento,
+            "Descripcion" => $cadena_decifrada->Descripcion,
+            "TipoParticipante" => $cadena_decifrada->TipoParticipante,
+            "FechaTermino" => $cadena_decifrada->FechaTermino,
+            "documento" => $cadena_decifrada->documento,
+            "folio_documento" => $folio_documento_participante
+        );
+
+        return response()->json($datos_validados, 200);
     }
     
 
