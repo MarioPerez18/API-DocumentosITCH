@@ -200,7 +200,7 @@ class DocumentController extends Controller
         );
         //se verifica si el archivo ya existe, si ya existe ya no se creará otra vez
         //sino existe generarlo.
-        $generados = Document::select('archive')->get();
+        /*$generados = Document::select('archive')->get();
         foreach($generados as $archivo_generado){
             if($nombre_archivo_pdf == $archivo_generado["archive"]){
                 return response()->json([
@@ -208,14 +208,14 @@ class DocumentController extends Controller
                     "icono" => "error"
                 ], 208);
             } 
-        }
+        }*/
        
 
         $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_a_cifrar)), $datos_del_participante, $nombre_archivo_pdf);
-        $this->guardar_documento();
+        /*$this->guardar_documento();
         $id_documento = Document::select('id')->get();
         $this->vincular_documento_participante($id_documento,  $datos_del_participante);
-        $this->enviar_documentos_por_correo($datos_del_participante);
+        $this->enviar_documentos_por_correo($datos_del_participante);*/
         return response()->json([
             "documento" => "Documentos generados y enviados",
             "icono" => "success"
