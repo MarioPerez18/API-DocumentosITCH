@@ -19,6 +19,8 @@ class DocumentController extends Controller
    
     private $nombre_archivo;
     private $folio_documento;
+    private $cadena_participante_crifrada;
+    private $cadena_participante_crifrada_cortada;
 
    
     public function getNombreArchivo(){
@@ -37,6 +39,22 @@ class DocumentController extends Controller
         $this->folio_documento = $folio_documento;
     }
 
+    public function getCadenaCifrada(){
+        return $this->cadena_participante_crifrada;
+    }
+
+    public function setCadenaCifrada($cadena_cifrada){
+        $this->cadena_participante_crifrada = $cadena_cifrada;
+    }
+
+    public function getCadenaCifradaCortada(){
+        return $this->cadena_participante_crifrada_cortada;
+    }
+
+    public function setCadenaCifradaCortada($cadena_cifrada_cortada){
+        $this->cadena_participante_crifrada_cortada = $cadena_cifrada_cortada;
+    }
+
    
     /**
      * Display a listing of the resource.
@@ -49,8 +67,11 @@ class DocumentController extends Controller
     public function cifrar_datos($body){ 
         //crifrar datos.
         $datos_del_participante = json_encode($body);
-        $cifrarDatos = Crypt::encryptString($datos_del_participante);
-        $url = 'http://localhost:8000/api/validacion/' . $cifrarDatos;
+        $cadena_cifrada = Crypt::encryptString($datos_del_participante);
+        $this->setCadenaCifrada($cadena_cifrada);
+        $cadena_cifrada_cortada = substr($cadena_cifrada, 0, 50);
+        $this->setCadenaCifradaCortada($cadena_cifrada_cortada);
+        $url = 'http://localhost:8000/api/validacion/' . $cadena_cifrada_cortada;
         return $url;
     }
 
@@ -200,7 +221,7 @@ class DocumentController extends Controller
         );
         //se verifica si el archivo ya existe, si ya existe ya no se creará otra vez
         //sino existe generarlo.
-        /*$generados = Document::select('archive')->get();
+        $generados = Document::select('archive')->get();
         foreach($generados as $archivo_generado){
             if($nombre_archivo_pdf == $archivo_generado["archive"]){
                 return response()->json([
@@ -208,14 +229,14 @@ class DocumentController extends Controller
                     "icono" => "error"
                 ], 208);
             } 
-        }*/
+        }
        
 
         $this->generar_pdf($this->generar_qrcode($this->cifrar_datos($datos_a_cifrar)), $datos_del_participante, $nombre_archivo_pdf);
-        /*$this->guardar_documento();
+        $this->guardar_documento();
         $id_documento = Document::select('id')->get();
         $this->vincular_documento_participante($id_documento,  $datos_del_participante);
-        $this->enviar_documentos_por_correo($datos_del_participante);*/
+        $this->enviar_documentos_por_correo($datos_del_participante);
         return response()->json([
             "documento" => "Documentos generados y enviados",
             "icono" => "success"
@@ -245,7 +266,9 @@ class DocumentController extends Controller
             'delivered' => $entregado,
             'archive' => $archivo,
             'dateGenerated' => $fechaGenerado,
-            'deliveryDate' => $fechaEntregado
+            'deliveryDate' => $fechaEntregado,
+            'encryptedString' => $this->getCadenaCifrada(),
+            'cutEncryptedString' => $this->getCadenaCifradaCortada()
         ]);
     }
 
@@ -287,7 +310,14 @@ class DocumentController extends Controller
 
 
     public function decifrar_documento($cadena){
-        $cadena_decifrada = json_decode($this->decifrar_cadena($cadena));
+        
+        //recuperar la cadena original
+        $cadena_original_cifrada = Document::select('encryptedString')->where('cutEncryptedString', $cadena)->get();
+        foreach($cadena_original_cifrada as $cadena_original){
+            $cadena_original = $cadena_original;
+        }
+        
+        $cadena_decifrada = json_decode($this->decifrar_cadena($cadena_original["encryptedString"]));
         //sacar el folio del documento
         $folio_documento_participante = EventUser::select('documents.number')
         ->join('documents', 'event_user.document_id', '=', 'documents.id')
@@ -306,7 +336,6 @@ class DocumentController extends Controller
             "documento" => $cadena_decifrada->documento,
             "folio_documento" => $folio_documento_participante
         );
-
         return response()->json($datos_validados, 200);
     }
     

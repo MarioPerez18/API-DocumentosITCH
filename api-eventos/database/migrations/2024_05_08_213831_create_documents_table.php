@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('archive');
             $table->dateTime('dateGenerated');
             $table->dateTime('deliveryDate');
+            $table->text('encryptedString');
+            $table->text('cutEncryptedString');
             $table->timestamps();
         });
     }

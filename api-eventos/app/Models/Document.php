@@ -16,7 +16,9 @@ class Document extends Model
         'delivered',
         'archive',
         'dateGenerated',
-        'deliveryDate'
+        'deliveryDate',
+        'encryptedString',
+        'cutEncryptedString'
     ];
 
     

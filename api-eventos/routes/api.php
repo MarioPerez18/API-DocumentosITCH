@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [RegisterController::class, 'store']);
 Route::post('/login', [LoginController::class, 'store']);
 Route::get('/institutions', [InstitutionController::class, 'index']);
-Route::get('/validation/{cadena}', [DocumentController::class, 'decifrar_documento']);
+Route::get('/validacion/{cadena}', [DocumentController::class, 'decifrar_documento']);
 
 
 Route::middleware(['auth:sanctum'])->group(function(){
