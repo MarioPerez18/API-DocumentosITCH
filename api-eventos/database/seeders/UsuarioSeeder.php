@@ -27,13 +27,13 @@ class UsuarioSeeder extends Seeder
         ]);
 
         User::create([
-            'paternalSurname' => 'Vargas',
-            'maternalSurname' => 'Ku',
-            'names' => 'Benjamín',
+            'paternalSurname' => 'Herrera',
+            'maternalSurname' => 'Cruz',
+            'names' => 'Fabián',
             'gender' => 'H',
             'phoneNumber' => '9837651023',
-            'email' => 'benjamin.vk@chetumal.tecnm.mx',
-            'password' => Hash::make('benjaminvargas'),
+            'email' => 'fabian.hc@gmail.com',
+            'password' => Hash::make('fabianherrera10'),
             'institution_id' => 1
         ]);
 

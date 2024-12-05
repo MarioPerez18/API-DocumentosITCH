@@ -107,7 +107,7 @@ class DocumentController extends Controller
         $this->setNombreArchivo($nombre_archivo);
         $ruta_pdf = public_path('archivos_pdf') . '/' . $nombre_archivo;
         //ruta del png
-        $ruta_png = public_path('plantilla_documentos') . '/TEC.png';
+        $ruta_png = public_path('plantilla_documentos') . '/' . $registro["TipoParticipante"] . '.' . 'png';
 
         //ruta de los logos del tecnm
         $ruta_png_itch = public_path('logos_itch') . '/logoItch.png';
@@ -238,13 +238,9 @@ class DocumentController extends Controller
         $this->vincular_documento_participante($id_documento,  $datos_del_participante);
         $this->enviar_documentos_por_correo($datos_del_participante);
         return response()->json([
-            "documento" => "Documentos generados y enviados",
+            "documento" => "Documento generado y enviado",
             "icono" => "success"
         ], 201);
-        
-        
-        //esto si funcionó, recupera el nombre del participante del objeto participante.
-        //return response()->json($request->details[0]["type"]);
     }
 
 
